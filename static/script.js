@@ -1,49 +1,49 @@
 let countdown;
+let timeLeft;
+let currentImageIndex = 0;
+let currentSound;
 
-function startCountdown() {
-    let timeLeft = 120;  // 2分（120秒）
-    const timerElement = document.getElementById("timer");
-    const messageElement = document.getElementById("message");
-    const imageContainer = document.getElementById("image-container");
+function startCountdown(duration) {
+    timeLeft = duration;
+    updateTimerDisplay();
+    currentImageIndex = 0;
 
-    if (countdown) {
-        clearInterval(countdown);
-    }
-
-    const images = [
-        "image1.jpg",
-        "image2.jpg",
-        "image3.jpg",
-        "image4.jpg",
-        "image5.jpg"
-    ];
-
-    // ランダムに1枚選択
-    const selectedImage = images[Math.floor(Math.random() * images.length)];
-    const baseName = selectedImage.split(".")[0]; // "image1" のように拡張子を除去
-    imageContainer.innerHTML = `<img src="/static/images1/${selectedImage}" alt="ランダム画像">`;
-
-    // 最初のメッセージ
-    messageElement.textContent = "やってみよう！";
+    // 最初の音を再生
+    currentSound = new Audio(sounds[0]);
+    currentSound.play();
 
     countdown = setInterval(() => {
-        let minutes = Math.floor(timeLeft / 60);
-        let seconds = timeLeft % 60;
-        timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        timeLeft--;
+        updateTimerDisplay();
 
         if (timeLeft === 60) {
-            // 残り1分で画像＆メッセージ変更
-            imageContainer.innerHTML = `<img src="/static/images2/${baseName}_2.jpg" alt="変更画像">`;
-            messageElement.textContent = "がんばって！もう少し！";
+            // 残り1分になったときの処理
+            switchImage(1); // ステップ2の画像に切り替え
+            if (currentSound) currentSound.pause();
+            currentSound = new Audio(sounds[1]);
+            currentSound.play();
         }
 
         if (timeLeft === 0) {
             clearInterval(countdown);
-            timerElement.textContent = "00:00";
-            messageElement.textContent = "終了しました！お疲れ様でした！";
-            imageContainer.innerHTML = `<img src="/static/images3/${baseName}_3.jpg" alt="完了画像">`;
-        } else {
-            timeLeft--;
+            // カウントダウン終了時の処理
+            switchImage(2); // ステップ3の画像に切り替え
+            if (currentSound) currentSound.pause();
+            currentSound = new Audio(sounds[2]);
+            currentSound.play();
+            // 必要に応じて「もう一回！」ボタンを表示
         }
     }, 1000);
+}
+
+function updateTimerDisplay() {
+    const timerElement = document.getElementById('timer');
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function switchImage(step) {
+    const imageContainer = document.getElementById('image-container');
+    imageContainer.innerHTML = `<img src="${images[step]}" alt="画像">`; // 画像を切り替え
 }
