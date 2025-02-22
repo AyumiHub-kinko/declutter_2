@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Declutterアプリ</title>
-    <link rel="stylesheet" href="style.css">
+    <title>カウントダウンタイマー</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Declutterアプリ</h1>
-    <p>時間内にお片付けしよう！</p>
+    <h1>カウントダウンタイマー</h1>
+    <button id="start-btn" onclick="startCountdown()">開始</button>
+    <div id="timer">2:00</div>
+    <div id="image-container"></div>
+    <div id="message">スタートボタンを押してね！</div>
 
-    <div id="timer">10:00</div> <!-- タイマーの表示部分 -->
-    <button id="startButton">スタート</button> <!-- タイマー開始ボタン -->
-
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
